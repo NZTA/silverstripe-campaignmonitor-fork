@@ -46,7 +46,7 @@ class CMList extends LazyLoadedCMObject
 
     protected function loadFullDetails()
     {
-        $interface = new CS_REST_Lists($this->ID, $this->apiKey);
+        $interface = new CS_REST_Lists($this->ID, $this->apiKey, log: $this->logger);
         $result = $interface->get();
         $response = $this->parseResult($result);
         $this->populateFrom($response);

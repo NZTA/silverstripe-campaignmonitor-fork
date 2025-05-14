@@ -110,7 +110,7 @@ class CMClient extends LazyLoadedCMObject
 
     protected function loadFullDetails()
     {
-        $interface = new CS_REST_Clients($this->ID, $this->apiKey);
+        $interface = new CS_REST_Clients($this->ID, $this->apiKey, log: $this->logger);
         $result = $interface->get();
         $response = $this->parseResult($result);
         $this->populateFrom($response);
@@ -119,17 +119,17 @@ class CMClient extends LazyLoadedCMObject
     /**
      * Retrieves all lists for this client
      *
-     * @return ArrayList[CMList]
+     * @return ArrayList<CMList>
      */
     public function Lists()
     {
-        $interface = new CS_REST_Clients($this->ID, $this->apiKey);
+        $interface = new CS_REST_Clients($this->ID, $this->apiKey, log: $this->logger);
         $result = $interface->get_lists();
         $response = $this->parseResult($result);
 
-        $lists = new ArrayList();
+        $lists = ArrayList::create();
         foreach ($response as $listData) {
-            $lists->push(new CMList($this->apiKey, $listData));
+            $lists->push(CMList::create($this->apiKey, $listData));
         }
 
         return $lists;
@@ -143,17 +143,17 @@ class CMClient extends LazyLoadedCMObject
     /**
      * Retrieves all campaigns for this client
      *
-     * @return ArrayList[CMCampaign]
+     * @return ArrayList<CMCampaign>
      */
     public function Campaigns()
     {
-        $interface = new CS_REST_Clients($this->ID, $this->apiKey);
+        $interface = new CS_REST_Clients($this->ID, $this->apiKey, log: $this->logger);
         $result = $interface->get_campaigns();
         $response = $this->parseResult($result);
 
-        $campaigns = new ArrayList();
+        $campaigns = ArrayList::create();
         foreach ($response as $campaignData) {
-            $campaigns->push(new CMCampaign($this->apiKey, $campaignData));
+            $campaigns->push(CMCampaign::create($this->apiKey, $campaignData));
         }
 
         return $campaigns;
