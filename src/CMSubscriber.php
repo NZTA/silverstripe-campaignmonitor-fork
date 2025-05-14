@@ -173,10 +173,12 @@ class CMSubscriber extends LazyLoadedCMObject
     {
         $list = $this->getList();
         if (empty($list) || empty($list->ID) || empty($this->apiKey)) {
-            throw new CMError("Could not build interface for CMSubscriber without a list ID and apiKey", 500);
+            $message = "Could not build interface for CMSubscriber without a list ID and apiKey";
+            $this->logger->log_message($message, static::class, LogLevel::ERROR);
+            throw new CMError($message, 500);
         }
 
-        return new CS_REST_Subscribers($list->ID, $this->apiKey);
+        return new CS_REST_Subscribers($list->ID, $this->apiKey, log: $this->logger);
     }
 
     public function isNew()

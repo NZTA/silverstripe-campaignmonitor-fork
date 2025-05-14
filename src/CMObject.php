@@ -44,7 +44,7 @@ abstract class CMObject extends CMBase
      * Parses a stdObject into a nested array recursively, in a format suitable
      * for $this->record
      *
-     * @param mixed $data Either an object or array with field values
+     * @param object|array $data Either an object or array with field values
      * @return array The parsed data
      */
     protected function convertToArray($data)
@@ -61,16 +61,16 @@ abstract class CMObject extends CMBase
 
         // Recursively convert array
         if (is_array($data)) {
-            return array_map(array($this, 'convertToArray'), $data);
+            return array_map([$this, 'convertToArray'], $data);
         }
 
-        return $data;
+        return [$data];
     }
 
     /**
      * Populates the object from the given data
      *
-     * @param mixed $data Either an object or array with field values
+     * @param object|array $data Either an object or array with field values
      */
     protected function populateFrom($data)
     {
@@ -83,7 +83,7 @@ abstract class CMObject extends CMBase
     /**
      * Determine if this is a new object, or one that exists in the database
      *
-     * @return boolean
+     * @return bool
      */
     public function isNew()
     {
@@ -92,17 +92,13 @@ abstract class CMObject extends CMBase
 
     public function hasField($field)
     {
-        return array_key_exists($field, $this->record) ||
-            $this->hasMethod("get{$field}");
+        return ($this->record && array_key_exists($field, $this->record))
+            || $this->hasMethod("get{$field}");
     }
 
     public function getField($field)
     {
-        if (isset($this->record[$field])) {
-            return $this->record[$field];
-        }
-
-        return parent::getField($field);
+        return $this->record[$field] ?? parent::getField($field);
     }
 
     public function setField($field, $value)
