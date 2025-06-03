@@ -41,11 +41,10 @@ abstract class CMObject extends CMBase
     }
 
     /**
-     * Parses a stdObject into a nested array recursively, in a format suitable
-     * for $this->record
+     * Parses a stdObject into a nested associative array recursively
      *
      * @param object|array $data Either an object or array with field values
-     * @return array The parsed data
+     * @return mixed The parsed data
      */
     protected function convertToArray($data)
     {
@@ -64,20 +63,22 @@ abstract class CMObject extends CMBase
             return array_map([$this, 'convertToArray'], $data);
         }
 
-        return [$data];
+        return $data;
     }
 
     /**
      * Populates the object from the given data
      *
-     * @param object|array $data Either an object or array with field values
+     * @param array $data Either an object or array with field values
      */
     protected function populateFrom($data)
     {
-        $this->record = $this->convertToArray($data);
-        if (empty($this->record)) {
-            $this->record = array();
+        if (!is_array($this->record)) {
+            $error = 'Bad data received to set record info.';
+            $this->logger->error($error . 'Expected an associative array, found: ' . get_type($data));
+            throw new CMError($error, 500);
         }
+        $this->record = $data;
     }
 
     /**

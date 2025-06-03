@@ -21,7 +21,8 @@ class CMResources extends CMBase
      */
     public function Clients()
     {
-        $interface = new CS_REST_General($this->apiKey, log: $this->logger);
+        $serialiser = new JsonAssocDeserialiser($this->logger);
+        $interface = new CS_REST_General($this->apiKey, log: $this->logger, serialiser: $serialiser);
         $result = $interface->get_clients();
         $response = $this->parseResult($result);
 

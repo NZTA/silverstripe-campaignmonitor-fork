@@ -24,8 +24,6 @@ class CMClient extends LazyLoadedCMObject
 
     protected function populateFrom($data)
     {
-        $data = $this->convertToArray($data);
-
         // Check billing data
         if (isset($data['BillingDetails'])) {
             $this->setBillingFields($data['BillingDetails']);
@@ -110,7 +108,8 @@ class CMClient extends LazyLoadedCMObject
 
     protected function loadFullDetails()
     {
-        $interface = new CS_REST_Clients($this->ID, $this->apiKey, log: $this->logger);
+        $serialiser = new JsonAssocDeserialiser($this->logger);
+        $interface = new CS_REST_Clients($this->ID, $this->apiKey, log: $this->logger, serialiser: $serialiser);
         $result = $interface->get();
         $response = $this->parseResult($result);
         $this->populateFrom($response);
@@ -123,7 +122,8 @@ class CMClient extends LazyLoadedCMObject
      */
     public function Lists()
     {
-        $interface = new CS_REST_Clients($this->ID, $this->apiKey, log: $this->logger);
+        $serialiser = new JsonAssocDeserialiser($this->logger);
+        $interface = new CS_REST_Clients($this->ID, $this->apiKey, log: $this->logger, serialiser: $serialiser);
         $result = $interface->get_lists();
         $response = $this->parseResult($result);
 
@@ -147,7 +147,8 @@ class CMClient extends LazyLoadedCMObject
      */
     public function Campaigns()
     {
-        $interface = new CS_REST_Clients($this->ID, $this->apiKey, log: $this->logger);
+        $serialiser = new JsonAssocDeserialiser($this->logger);
+        $interface = new CS_REST_Clients($this->ID, $this->apiKey, log: $this->logger, serialiser: $serialiser);
         $result = $interface->get_campaigns();
         $response = $this->parseResult($result);
 

@@ -95,8 +95,6 @@ class CMSubscriber extends LazyLoadedCMObject
 
     public function populateFrom($data)
     {
-        $data = $this->convertToArray($data);
-
         if (isset($data['CustomFields'])) {
             $this->setCustomFields($data['CustomFields']);
             unset($data['CustomFields']);
@@ -178,7 +176,8 @@ class CMSubscriber extends LazyLoadedCMObject
             throw new CMError($message, 500);
         }
 
-        return new CS_REST_Subscribers($list->ID, $this->apiKey, log: $this->logger);
+        $serialiser = new JsonAssocDeserialiser($this->logger);
+        return new CS_REST_Subscribers($list->ID, $this->apiKey, log: $this->logger, serialiser: $serialiser);
     }
 
     public function isNew()
