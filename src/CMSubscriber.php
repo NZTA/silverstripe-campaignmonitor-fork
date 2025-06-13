@@ -225,7 +225,7 @@ class CMSubscriber extends LazyLoadedCMObject
 
         user_error("Not implemented", E_USER_ERROR);
 
-        $this->originalEmail = $response->EmailAddress;
+        $this->originalEmail = $response['EmailAddress'];
     }
 
     public function Save()

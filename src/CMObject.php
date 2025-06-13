@@ -17,7 +17,7 @@ abstract class CMObject extends CMBase
      *
      * @var array
      */
-    protected $record = array();
+    protected $record = [];
 
     /**
      * Serialises the data into a format suitable to be sent via the CM api.

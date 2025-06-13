@@ -110,8 +110,7 @@ class CMClient extends LazyLoadedCMObject
     {
         $serialiser = new JsonAssocDeserialiser($this->logger);
         $interface = new CS_REST_Clients($this->ID, $this->apiKey, log: $this->logger, serialiser: $serialiser);
-        $result = $interface->get();
-        $response = $this->parseResult($result);
+        $response = $this->parseResult($interface->get());
         $this->populateFrom($response);
     }
 
@@ -124,15 +123,9 @@ class CMClient extends LazyLoadedCMObject
     {
         $serialiser = new JsonAssocDeserialiser($this->logger);
         $interface = new CS_REST_Clients($this->ID, $this->apiKey, log: $this->logger, serialiser: $serialiser);
-        $result = $interface->get_lists();
-        $response = $this->parseResult($result);
+        $response = $this->parseResult($interface->get_lists());
 
-        $lists = ArrayList::create();
-        foreach ($response as $listData) {
-            $lists->push(CMList::create($this->apiKey, $listData));
-        }
-
-        return $lists;
+        return ArrayList::create(array_map(fn($list) => CMList::create($this->apiKey, $list), $response));
     }
 
     public function Save()
@@ -149,14 +142,11 @@ class CMClient extends LazyLoadedCMObject
     {
         $serialiser = new JsonAssocDeserialiser($this->logger);
         $interface = new CS_REST_Clients($this->ID, $this->apiKey, log: $this->logger, serialiser: $serialiser);
-        $result = $interface->get_campaigns();
-        $response = $this->parseResult($result);
+        $response = $this->parseResult($interface->get_campaigns());
 
-        $campaigns = ArrayList::create();
-        foreach ($response as $campaignData) {
-            $campaigns->push(CMCampaign::create($this->apiKey, $campaignData));
-        }
-
-        return $campaigns;
+        return ArrayList::create(array_map(
+            fn($campaign) => CMCampaign::create($this->apiKey, $campaign),
+            $response['Results']
+        ));
     }
 }

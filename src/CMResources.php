@@ -23,16 +23,9 @@ class CMResources extends CMBase
     {
         $serialiser = new JsonAssocDeserialiser($this->logger);
         $interface = new CS_REST_General($this->apiKey, log: $this->logger, serialiser: $serialiser);
-        $result = $interface->get_clients();
-        $response = $this->parseResult($result);
+        $response = $this->parseResult($interface->get_clients());
 
-        // Save each client
-        $clients = ArrayList::create();
-        foreach ($response as $clientData) {
-            $clients->push(CMClient::create($this->apiKey, $clientData));
-        }
-
-        return $clients;
+        return ArrayList::create(array_map(fn($client) => CMClient::create($this->apiKey, $client), $response));
     }
 
     /**

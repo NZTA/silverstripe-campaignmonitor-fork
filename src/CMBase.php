@@ -35,10 +35,9 @@ abstract class CMBase extends ViewableData
      */
     protected function checkResult($result)
     {
-
         if (!$result->was_successful()) {
-            $this->logger->log_message($result->response->Message, static::class, LogLevel::ERROR);
-            throw new CMError($result->response->Message, $result->http_status_code);
+            $this->logger->log_message($result->response['Message'], static::class, LogLevel::ERROR);
+            throw new CMError($result->response['Message'], $result->http_status_code);
         }
 
         return true;
