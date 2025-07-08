@@ -108,10 +108,12 @@ class CMClient extends LazyLoadedCMObject
 
     protected function loadFullDetails()
     {
+        $this->logger->setContext(__CLASS__ . '::' . __FUNCTION__);
         $serialiser = new JsonAssocDeserialiser($this->logger);
         $interface = new CS_REST_Clients($this->ID, $this->apiKey, log: $this->logger, serialiser: $serialiser);
         $response = $this->parseResult($interface->get());
         $this->populateFrom($response);
+        $this->logger->setContext('');
     }
 
     /**
@@ -121,9 +123,11 @@ class CMClient extends LazyLoadedCMObject
      */
     public function Lists()
     {
+        $this->logger->setContext(__CLASS__ . '::' . __FUNCTION__);
         $serialiser = new JsonAssocDeserialiser($this->logger);
         $interface = new CS_REST_Clients($this->ID, $this->apiKey, log: $this->logger, serialiser: $serialiser);
         $response = $this->parseResult($interface->get_lists());
+        $this->logger->setContext('');
 
         return ArrayList::create(array_map(fn($list) => CMList::create($this->apiKey, $list), $response));
     }
@@ -140,9 +144,11 @@ class CMClient extends LazyLoadedCMObject
      */
     public function Campaigns()
     {
+        $this->logger->setContext(__CLASS__ . '::' . __FUNCTION__);
         $serialiser = new JsonAssocDeserialiser($this->logger);
         $interface = new CS_REST_Clients($this->ID, $this->apiKey, log: $this->logger, serialiser: $serialiser);
         $response = $this->parseResult($interface->get_campaigns());
+        $this->logger->setContext('');
 
         return ArrayList::create(array_map(
             fn($campaign) => CMCampaign::create($this->apiKey, $campaign),

@@ -21,9 +21,11 @@ class CMResources extends CMBase
      */
     public function Clients()
     {
+        $this->logger->setContext(__CLASS__ . '::' . __FUNCTION__);
         $serialiser = new JsonAssocDeserialiser($this->logger);
         $interface = new CS_REST_General($this->apiKey, log: $this->logger, serialiser: $serialiser);
         $response = $this->parseResult($interface->get_clients());
+        $this->logger->setContext('');
 
         return ArrayList::create(array_map(fn($client) => CMClient::create($this->apiKey, $client), $response));
     }

@@ -44,10 +44,12 @@ class CMList extends LazyLoadedCMObject
 
     protected function loadFullDetails()
     {
+        $this->logger->setContext(__CLASS__ . '::' . __FUNCTION__);
         $serialiser = new JsonAssocDeserialiser($this->logger);
         $interface = new CS_REST_Lists($this->ID, $this->apiKey, log: $this->logger, serialiser: $serialiser);
         $result = $interface->get();
         $response = $this->parseResult($result);
         $this->populateFrom($response);
+        $this->logger->setContext('');
     }
 }

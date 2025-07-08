@@ -23,6 +23,8 @@ class CMLogger
     use LoggerAwareTrait;
     use Injectable;
 
+    private string $context = '';
+
     public const CONVERT = [
         \CS_REST_LOG_ERROR => LogLevel::ERROR,
         \CS_REST_LOG_WARNING => LogLevel::WARNING,
@@ -62,7 +64,13 @@ class CMLogger
             default:
                 throw new InvalidArgumentException('Bad log level: ' . $level);
         }
+        $fullMessage = trim($this->context . ' ' . $message, ' ');
+        $this->logger->log($level, $fullMessage, ['module' => $module]);
+    }
 
-        $this->logger->log($level, $message, ['module' => $module]);
+    public function setContext(string $context)
+    {
+        $this->context = $context;
+        return $this;
     }
 }

@@ -217,11 +217,13 @@ class CMSubscriber extends LazyLoadedCMObject
 
     protected function loadFullDetails()
     {
+        $this->logger->setContext(__CLASS__ . '::' . __FUNCTION__);
         $interface = $this->buildRestInterface();
 
         // Determine identifier by which we retrieve this record
         $result = $interface->get($this->ID);
         $response = $this->parseResult($result);
+        $this->logger->setContext('');
 
         user_error("Not implemented", E_USER_ERROR);
 
@@ -230,6 +232,7 @@ class CMSubscriber extends LazyLoadedCMObject
 
     public function Save()
     {
+        $this->logger->setContext(__CLASS__ . '::' . __FUNCTION__);
         $interface = $this->buildRestInterface();
         $data = $this->serializeData();
         if ($this->isNew()) {
@@ -239,6 +242,7 @@ class CMSubscriber extends LazyLoadedCMObject
         }
         // Check result, and reset ID after successful save
         $this->parseResult($result);
+        $this->logger->setContext('');
         $this->originalEmail = $this->EmailAddress;
     }
 
