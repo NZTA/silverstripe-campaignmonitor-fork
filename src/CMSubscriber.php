@@ -132,6 +132,9 @@ class CMSubscriber extends LazyLoadedCMObject
             }
         }
         $data['CustomFields'] = $customFields;
+        if (!isset($data['ConsentToTrack'])) {
+            $data['ConsentToTrack'] = 'Unchanged';
+        }
 
         return $data;
     }
